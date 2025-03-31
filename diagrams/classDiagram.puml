@@ -22,6 +22,7 @@ class Snake {
     + resetSpeed()
     + growLength()
     + changeDirection(Vector3)
+    + move()
 
     - direction: Vector3
     - length: Int
