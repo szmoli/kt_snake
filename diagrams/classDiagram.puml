@@ -26,6 +26,7 @@ class Snake {
     - direction: Vector3
     - length: Int
     - speed: Float
+    - body: List<Vector3>
 }
 
 class Point {
