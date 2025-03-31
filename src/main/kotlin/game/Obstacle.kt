@@ -1,3 +1,5 @@
 package game
 
-class Obstacle(val x: Int, val y: Int) : GameObject(x, y)
+import utility.Vector3
+
+class Obstacle(position: Vector3) : GameObject(position)
