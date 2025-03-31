@@ -9,7 +9,7 @@ class Game {
     + endGame()
 
     - worldSize: Vector3
-    - point: Point
+    - point: Food
     - obstacles: List<Obstacle>
 }
 
@@ -27,10 +27,9 @@ class Snake {
     - direction: Vector3
     - length: Int
     - speed: Float
-    - body: List<Vector3>
 }
 
-class Point {
+class Food {
 }
 
 class Obstacle {
@@ -53,18 +52,19 @@ class Vector3 {
 }
 
 ' Inheritance
-GameObject <|-up- Point
+GameObject <|-up- Food
 GameObject <|-up- Obstacle
 GameObject <|-up- Snake
 
 ' Associations
-Game "snake" *.. Snake
-Game "point" *.. Point
-Game "obstacles" *.. Obstacle
-Game "worldSize" *.left. Vector3
-GameObject "position" *.left. Vector3
-Snake "direction" *.left. Vector3
-View "game" *.. Game
-Controller "game" *.. Game
+Game "1" *.. "1" Snake : "snake"
+Game "1" *.. "1" Food : "food"
+Game "1" *.. "0..*" Obstacle : "obstacles"
+Game "1" *.left. "1" Vector3 : "worldSize"
+GameObject "1" *.left. "1" Vector3 : "position"
+Snake "1" *.left. "1" Vector3 : "direction"
+Snake "1" *.left. "1..*" Vector3 : "body"
+View "1" *.. "1" Game : "game"
+Controller "1" *.. "1" Game : "game"
 
 @enduml
