@@ -1,0 +1,68 @@
+@startuml classDiagram
+skinparam groupInheritance 2
+
+' Game classes
+class Game {
+    + checkSnakeCollision(): bool
+    + checkCollision(GameObject, GameObject): bool
+    + startGame()
+    + endGame()
+
+    - worldSize: Vector3
+    - point: Point
+    - obstacles: List<Obstacle>
+}
+
+abstract GameObject {
+    - position: Vector3
+}
+
+class Snake {
+    + speedUp()
+    + resetSpeed()
+    + growLength()
+    + changeDirection(Vector3)
+
+    - direction: Vector3
+    - length: Int
+    - speed: Float
+}
+
+class Point {
+}
+
+class Obstacle {
+}
+
+' Util classes
+class Controller {
+    + handleInput()
+    + updateGame()
+}
+
+class View {
+    + drawGame()
+}
+
+class Vector3 {
+    - x: Int
+    - y: Int
+    - w: Int
+}
+
+' Inheritance
+GameObject <|-up- Point
+GameObject <|-up- Obstacle
+GameObject <|-up- Snake
+
+' Associations
+Game "snake" *.. Snake
+Game "point" *.. Point
+Game "obstacles" *.. Obstacle
+Game "worldSize" *.left. Vector3
+GameObject "position" *.left. Vector3
+Snake "direction" *.left. Vector3
+View "game" *.. Game
+Controller "game" *.. Game
+
+@enduml
