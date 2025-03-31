@@ -7,10 +7,6 @@ class Game {
     + checkCollision(GameObject, GameObject): bool
     + startGame()
     + endGame()
-
-    - worldSize: Vector3
-    - point: Food
-    - obstacles: List<Obstacle>
 }
 
 abstract GameObject {
