@@ -1,3 +1,5 @@
 package game
 
-class Point(val x: Int, val y: Int) : GameObject(x, y)
+import utility.Vector3
+
+class Food(position: Vector3) : GameObject(position)
