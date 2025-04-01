@@ -1,21 +1,31 @@
 package utility
 
 class Vector3(var x: Int, var y: Int, var w: Int) {
-    fun scale(scalar: Int) {
-        x = x * scalar
-        y = y * scalar
-        w = w * scalar
+    fun scale(scalar: Int): Vector3 {
+        return Vector3(
+            x * scalar,
+            y * scalar,
+            w * scalar
+        )
     }
 
-    fun add(vector: Vector3) {
-        x = x + vector.x
-        y = y + vector.y
-        w = w + vector.w
+    fun add(v: Vector3): Vector3 {
+        return Vector3(
+            x + v.x,
+            y + v.y,
+            w + v.w
+        )
     }
 
-    fun sub(vector: Vector3) {
-        x = x - vector.x
-        y = y - vector.y
-        w = w - vector.w
+    /**
+     * Calculates the vector pointing from this to vector (i.e. result = vector - this)
+     * @param vector Where
+     */
+    fun sub(v: Vector3): Vector3 {
+        return Vector3(
+            x - v.x,
+            y - v.y,
+            w - v.w
+        )
     }
 }

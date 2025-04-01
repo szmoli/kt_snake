@@ -20,7 +20,7 @@ class Snake(position: Vector3) : GameObject(position) {
         }
 
         // Move the head in the current direction.
-        body[0].add(direction)
+        body[0] = body[0].add(direction)
     }
 
     /**
@@ -35,10 +35,22 @@ class Snake(position: Vector3) : GameObject(position) {
      * Grows the snake's length by one.
      */
     fun growLength() {
-        length++
+        val last = body.last()
+        val offset: Vector3 = if (body.size == 1) {
+            // Use the inverse of the direction as the offset.
+            Vector3(direction.x, direction.y, direction.w)
+        }
+        else {
+            // Calculate the offset based on the last two body pieces.
+            val secondLast = body[body.size - 2]
+            secondLast.sub(last)
+        }
+
+        val inverseOffset = offset.scale(-1)
+        var newPiece = last.add(inverseOffset)
+        body.addLast(newPiece)
     }
 
-    var length = 1
     var direction = Vector3(1, 0, 0)
     var body: MutableList<Vector3> = mutableListOf<Vector3>(position)
 }
