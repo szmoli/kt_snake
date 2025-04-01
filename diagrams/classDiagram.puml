@@ -14,14 +14,10 @@ abstract GameObject {
 }
 
 class Snake {
-    + speedUp()
-    + resetSpeed()
     + growLength()
     + changeDirection(Vector3)
     + move()
 
-    - direction: Vector3
-    - length: Int
     - speed: Float
 }
 
@@ -45,6 +41,10 @@ class Vector3 {
     - x: Int
     - y: Int
     - w: Int
+
+    + sub(Vector3): Vector3
+    + add(Vector3): Vector3
+    + scale(Vector3): Vector3
 }
 
 ' Inheritance
