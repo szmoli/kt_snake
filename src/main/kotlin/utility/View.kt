@@ -2,9 +2,16 @@ package utility
 
 import game.Game
 import game.GameObject
+import game.Leaderboard
+import game.Menu
 
-class View(val game: Game) {
+class View(val viewable: IViewable) {
     companion object {
+        enum class ViewState {
+            MENU, LEADERBOARD, GAME
+        }
+
+        var state = ViewState.MENU
         const val COLUMNS = 80
         const val LINES = 24
         const val SIZE = COLUMNS * LINES
@@ -54,11 +61,7 @@ class View(val game: Game) {
      * @see viewBuffer
      */
     fun sync() {
-        for (i in 0 ..< SIZE) {
-            val worldPosition = worldPosition(i)
-            val gameObject = game.objectAt(worldPosition)
-            viewBuffer[i] = gameObject?.tile(worldPosition) ?: ' '
-        }
+        viewBuffer = viewable.viewBufferData(SIZE)
     }
 
     /**

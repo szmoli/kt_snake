@@ -1,7 +1,10 @@
 package game
 
+import utility.IViewable
 import utility.Vector3
 import utility.View
+import utility.View.Companion.SIZE
+import utility.View.Companion.worldPosition
 import kotlin.collections.List
 import kotlin.math.max
 import kotlin.random.Random
@@ -9,7 +12,7 @@ import kotlin.random.Random
 /**
  * Constructs a game class, which manages the game's logic.
  */
-class Game(val worldSize: Vector3, val obstacleChance: Float) {
+class Game(val worldSize: Vector3, val obstacleChance: Float) : IViewable {
     /**
      * The snake stars from the middle of the world.
      */
@@ -22,14 +25,16 @@ class Game(val worldSize: Vector3, val obstacleChance: Float) {
         List<Obstacle?>(worldSize.x * worldSize.y) { index ->
             val position = View.worldPosition(index)
             val center = Vector3(worldSize.x / 2, worldSize.y / 2, 1)
-            val middleCirclePoint = ((position.x - center.x) * (position.x - center.x)) + ((position.y - center.y) * (position.y - center.y));
+            val middleCirclePoint =
+                ((position.x - center.x) * (position.x - center.x)) + ((position.y - center.y) * (position.y - center.y));
             val circleRadius = 5
             val obstacle = Obstacle(position, Vector3(Random.nextInt(1, 4), Random.nextInt(1, 4), 0))
 
             obstacle.takeIf {
                 val outsideMiddleCircle = middleCirclePoint > circleRadius
                 val shouldSpawn = Random.nextFloat() < obstacleChance
-                val isBorder = obstacle.position.x == 0 || obstacle.position.x == worldSize.x - 1 || obstacle.position.y == 0 || obstacle.position.y == worldSize.y - 1
+                val isBorder =
+                    obstacle.position.x == 0 || obstacle.position.x == worldSize.x - 1 || obstacle.position.y == 0 || obstacle.position.y == worldSize.y - 1
 
                 (outsideMiddleCircle && shouldSpawn) || isBorder
             }
@@ -75,7 +80,11 @@ class Game(val worldSize: Vector3, val obstacleChance: Float) {
             x = Random.nextInt(worldSize.x)
             y = Random.nextInt(worldSize.y)
             food = Food(Vector3(x, y, 1))
-        } while ((x == worldSize.x / 2 && y == worldSize.y / 2) || obstacles.any { it.checkCollision(food) && snake.checkCollision(food) }) // Check for the world center and if there's already an obstacle or if the snake is there
+        } while ((x == worldSize.x / 2 && y == worldSize.y / 2) || obstacles.any {
+                it.checkCollision(food) && snake.checkCollision(
+                    food
+                )
+            }) // Check for the world center and if there's already an obstacle or if the snake is there
 
         return food
     }
@@ -102,5 +111,15 @@ class Game(val worldSize: Vector3, val obstacleChance: Float) {
         }
 
         return null
+    }
+
+    override fun viewBufferData(bufferSize: Int): CharArray {
+        val bufferData: CharArray = CharArray(bufferSize) {
+            val worldPosition = worldPosition(it)
+            val gameObject = objectAt(worldPosition)
+            gameObject?.tile(worldPosition) ?: ' '
+        }
+
+        return bufferData
     }
 }
