@@ -66,9 +66,12 @@ class View(val game: Game) {
      * @see viewBuffer
      */
     fun draw() {
+//        print("\u001B[H")
+//        System.out.flush()
         for (i in 0 ..< SIZE) {
             print(viewBuffer[i])
-            if (i % COLUMNS == COLUMNS - 1) {
+            val worldPosition = worldPosition(i)
+            if (worldPosition.x == COLUMNS - 1) {
                 print('\n')
             }
         }

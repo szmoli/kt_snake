@@ -23,15 +23,15 @@ class Game(val worldSize: Vector3, val obstacleChance: Float) {
             val position = View.worldPosition(index)
             val center = Vector3(worldSize.x / 2, worldSize.y / 2, 1)
             val middleCirclePoint = ((position.x - center.x) * (position.x - center.x)) + ((position.y - center.y) * (position.y - center.y));
-//            val biggerDimension = max(worldSize.x, worldSize.y)
             val circleRadius = 5
-            println("$middleCirclePoint vs $circleRadius")
-            val obstacle = Obstacle(position)
+            val obstacle = Obstacle(position, Vector3(Random.nextInt(1, 4), Random.nextInt(1, 4), 0))
+
             obstacle.takeIf {
                 val outsideMiddleCircle = middleCirclePoint > circleRadius
                 val shouldSpawn = Random.nextFloat() < obstacleChance
-                println("$outsideMiddleCircle $shouldSpawn")
-                outsideMiddleCircle && shouldSpawn
+                val isBorder = obstacle.position.x == 0 || obstacle.position.x == worldSize.x - 1 || obstacle.position.y == 0 || obstacle.position.y == worldSize.y - 1
+
+                (outsideMiddleCircle && shouldSpawn) || isBorder
             }
         }.filterNotNull()
     }
@@ -92,7 +92,7 @@ class Game(val worldSize: Vector3, val obstacleChance: Float) {
         }
 
         for (obstacle in obstacles) {
-            if (Vector3.equals(obstacle.position, position)) {
+            if (obstacle.checkCollision(position)) {
                 return obstacle
             }
         }
