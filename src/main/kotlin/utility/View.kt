@@ -1,24 +1,64 @@
 package utility
 
 import game.Game
+import game.GameObject
 
 class View(val game: Game) {
-    val columns: Int = System.getenv("COLUMNS").toInt()
-    val lines: Int = System.getenv("LINES").toInt()
-    val size = columns * lines;
+    companion object {
+        const val COLUMNS = 80
+        const val LINES = 24
+        const val SIZE = COLUMNS * LINES
+
+        /**
+         * Returns the world size.
+         * @return World size
+         */
+        fun worldSize(): Vector3 = Vector3(COLUMNS, LINES, 0)
+
+        /**
+         * Transforms a viewBuffer index to a world coordinate.
+         * @param bufferIndex An index of the viewBuffer
+         * @return A Vector3 world position
+         * @see viewBuffer
+         * @see Vector3
+         */
+        fun worldPosition(bufferIndex: Int): Vector3 {
+            return Vector3(
+                bufferIndex % COLUMNS,
+                bufferIndex / COLUMNS,
+                1
+            )
+        }
+
+        /**
+         * Transforms a world coordinate to a viewBuffer index.
+         * @param worldPosition A Vector3 world position
+         * @return An index into the viewBuffer
+         * @see viewBuffer
+         * @see Vector3
+         */
+        fun bufferIndex(worldPosition: Vector3): Int {
+            return worldPosition.y * COLUMNS + worldPosition.x
+        }
+    }
 
     /**
      * The view buffer stores the characters that represent the game. It's initialized to all blank characters.
      */
-    var viewBuffer: CharArray = CharArray(size) {
+    var viewBuffer: CharArray = CharArray(SIZE) {
         ' '
     }
 
     /**
-     * Updates the view buffer based on the game's state.
+     * Updates the viewBuffer based on the game's state.
+     * @see viewBuffer
      */
-    fun updateBuffer() {
-
+    fun sync() {
+        for (i in 0 ..< SIZE) {
+            val worldPosition = worldPosition(i)
+            val gameObject = game.objectAt(worldPosition)
+            viewBuffer[i] = gameObject?.tile(worldPosition) ?: ' '
+        }
     }
 
     /**
@@ -26,32 +66,11 @@ class View(val game: Game) {
      * @see viewBuffer
      */
     fun draw() {
-
-    }
-
-    /**
-     * Transforms a viewBuffer index to a world coordinate.
-     * @param bufferIndex An index of the viewBuffer
-     * @return A Vector3 world position
-     * @see viewBuffer
-     * @see Vector3
-     */
-    private fun worldPosition(bufferIndex: Int): Vector3 {
-        return Vector3(
-            bufferIndex % columns,
-            bufferIndex / columns,
-            1
-        )
-    }
-
-    /**
-     * Transforms a world coordinate to a viewBuffer index.
-     * @param worldPosition A Vector3 world position
-     * @return An index into the viewBuffer
-     * @see viewBuffer
-     * @see Vector3
-     */
-    private fun bufferIndex(worldPosition: Vector3): Int {
-        return worldPosition.y * columns + worldPosition.x
+        for (i in 0 ..< SIZE) {
+            print(viewBuffer[i])
+            if (i % COLUMNS == COLUMNS - 1) {
+                print('\n')
+            }
+        }
     }
 }

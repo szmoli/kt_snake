@@ -7,6 +7,33 @@ import utility.Vector3
  * @param position The position of the snake in the world.
  */
 class Snake(position: Vector3) : GameObject(position) {
+    override fun tile(worldPosition: Vector3): Char {
+        return when (Vector3.equals(body[0], worldPosition)) {
+            true -> 'O' // snake head tile
+            else -> 'X' // snake body tile
+        }
+    }
+
+    override fun checkCollision(other: GameObject): Boolean {
+        for (bodyPosition in body) {
+            if (Vector3.equals(bodyPosition, other.position)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    fun checkCollision(position: Vector3): Boolean {
+        for (bodyPosition in body) {
+            if (Vector3.equals(bodyPosition, position)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     /**
      * Moves the snake in the current direction.
      */

@@ -28,4 +28,10 @@ class Vector3(var x: Int, var y: Int, var w: Int) {
             w - v.w
         )
     }
+
+    companion object {
+        fun equals(v1: Vector3, v2: Vector3): Boolean {
+            return v1.x == v2.x && v1.y == v2.y && v1.w == v2.w
+        }
+    }
 }
